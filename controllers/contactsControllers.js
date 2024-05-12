@@ -4,6 +4,7 @@ import HttpError from "../helpers/HttpError.js";
 import {
   createContactSchema,
   updateContactSchema,
+  updateStatusContactSchema,
 } from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (_, res, next) => {
@@ -67,6 +68,25 @@ export const updateContact = async (req, res, next) => {
 
     const { id } = req.params;
     const result = await contactsService.updateContactById(id, req.body);
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+
+    res.json(result).status(200);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateStatusContact = async (req, res, next) => {
+  try {
+    const { error } = updateStatusContactSchema.validate(req.body);
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+
+    const { id } = req.params;
+    const result = await contactsService.updateStatusContactById(id, req.body);
     if (!result) {
       throw HttpError(404, "Not found");
     }
