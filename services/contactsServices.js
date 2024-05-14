@@ -1,69 +1,28 @@
-import fs from "fs/promises";
-import path from "path";
-import { nanoid } from "nanoid";
+import Contact from "../models/contact.js";
 
-const contactsPath = path.resolve("db", "contacts.json");
-
-const updateContacts = (contacts) =>
-  fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-
-async function listContacts() {
-  try {
-    const data = await fs.readFile(contactsPath);
-    const contacts = JSON.parse(data);
-    return contacts;
-  } catch (error) {
-    console.log(error.message);
-  }
+async function listContacts(filter, field) {
+  return Contact.find(filter, field);
 }
 
 async function getContactById(contactId) {
-  try {
-    const contacts = await listContacts();
-    const result = contacts.find((contact) => contact.id === contactId);
-    return result || null;
-  } catch (error) {
-    console.log(error.message);
-  }
+  return Contact.findById(contactId);
 }
 
 async function removeContact(contactId) {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((contact) => contact.id === contactId);
-  if (index === -1) {
-    return null;
-  }
-  const [result] = contacts.splice(index, 1);
-  await updateContacts(contacts);
-  return result;
+  return Contact.findByIdAndDelete(contactId);
 }
 
-async function addContact({ name, email, phone }) {
-  const contacts = await listContacts();
-  const newContact = {
-    id: nanoid(),
-    name,
-    email,
-    phone,
-  };
+async function addContact(data) {
+  return Contact.create(data);
 
-  contacts.push(newContact);
-  await updateContacts(contacts);
-  return newContact;
 }
 
 export const updateContactById = async (id, data) => {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((item) => item.id === id);
-  if (index === -1) {
-    return null;
-  }
-
-  contacts[index] = { ...contacts[index], ...data };
-  await updateContacts(contacts);
-
-  return contacts[index];
+  return Contact.findByIdAndUpdate(id, data);
 };
+
+export const updateStatusContactById = (id, data) =>
+  Contact.findByIdAndUpdate(id, data);
 
 export default {
   listContacts,
@@ -71,4 +30,5 @@ export default {
   removeContact,
   addContact,
   updateContactById,
+  updateStatusContactById,
 };
