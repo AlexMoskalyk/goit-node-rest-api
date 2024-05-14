@@ -20,10 +20,14 @@ export const updateContactById = async (id, data) => {
   return Contact.findByIdAndUpdate(id, data);
 };
 
+export const updateStatusContactById = (id, data) =>
+  Contact.findByIdAndUpdate(id, data);
+
 export default {
   listContacts,
   getContactById,
   removeContact,
   addContact,
   updateContactById,
+  updateStatusContactById,
 };
