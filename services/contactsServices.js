@@ -14,6 +14,7 @@ async function removeContact(contactId) {
 
 async function addContact(data) {
   return Contact.create(data);
+
 }
 
 export const updateContactById = async (id, data) => {
