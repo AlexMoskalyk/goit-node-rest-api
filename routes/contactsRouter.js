@@ -9,8 +9,11 @@ import {
 } from "../controllers/contactsControllers.js";
 import isValidId from "../middlewars/isValidId.js";
 import isEmptyBody from "../middlewars/isEmpryBody.js";
+import authenticate from "../middlewars/authenticate.js";
 
 const contactsRouter = express.Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get("/", getAllContacts);
 
@@ -23,7 +26,7 @@ contactsRouter.post("/", isEmptyBody, createContact);
 contactsRouter.put("/:id", isValidId, updateContact);
 
 contactsRouter.patch(
-  "/:id/favorite",
+  "/:id/favourite",
   isValidId,
   isEmptyBody,
   updateStatusContact
