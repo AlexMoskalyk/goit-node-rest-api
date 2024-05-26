@@ -48,6 +48,10 @@ const signIn = async (req, res, next) => {
 
     res.json({
       token,
+      user: {
+        email: user.email,
+        subscription: user.subscription,
+      },
     });
   } catch (error) {
     next(error);
@@ -67,7 +71,7 @@ const logout = async (req, res, next) => {
   try {
     const { _id } = req.user;
     await authService.updateUser({ _id }, { token: "" });
-    res.json({
+    res.status(204).json({
       message: "No Content",
     });
   } catch (error) {
