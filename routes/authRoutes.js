@@ -1,10 +1,15 @@
 import express from "express";
-import { authSignupSchema, authSigninSchema, authUserSubscritionSchema } from "../schemas/authSchema.js";
+import {
+  authSignupSchema,
+  authSigninSchema,
+  authUserSubscritionSchema,
+} from "../schemas/authSchema.js";
 import isValidId from "../middlewars/isValidId.js";
 import isEmptyBody from "../middlewars/isEmpryBody.js";
 import validateBody from "../decorators/validateBody.js";
 import authControllers from "../controllers/authControllers.js";
 import authenticate from "../middlewars/authenticate.js";
+import upload from "../middlewars/upload.js";
 
 const authRouter = express.Router();
 
@@ -13,6 +18,13 @@ authRouter.post(
   isEmptyBody,
   validateBody(authSignupSchema),
   authControllers.signup
+);
+
+authRouter.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  authControllers.updateAvatar
 );
 
 authRouter.post(
