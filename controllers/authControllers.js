@@ -109,6 +109,9 @@ const update = async (req, res, next) => {
 
 const updateAvatar = async (req, res, next) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file provided" });
+    }
     const { _id } = req.user;
     const { path: tempPath, originalname } = req.file;
     const ext = path.extname(originalname);
