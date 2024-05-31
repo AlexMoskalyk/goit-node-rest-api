@@ -3,6 +3,7 @@ import {
   authSignupSchema,
   authSigninSchema,
   authUserSubscritionSchema,
+  authEmailSchema,
 } from "../schemas/authSchema.js";
 import isValidId from "../middlewars/isValidId.js";
 import isEmptyBody from "../middlewars/isEmpryBody.js";
@@ -18,6 +19,14 @@ authRouter.post(
   isEmptyBody,
   validateBody(authSignupSchema),
   authControllers.signup
+);
+
+authRouter.get("/verify/:verificationToken", authControllers.verify);
+
+authRouter.post(
+  "/verify",
+  validateBody(authEmailSchema),
+  authControllers.resendVerify
 );
 
 authRouter.patch(
